@@ -1,0 +1,825 @@
+#####
+#####
+#####
+#####
+#####
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Gestão de metadados de Personagem
+  termsOfService: http://localhost:8080/docs/terms.html # Add em 'resources/static/docs/terms.html'
+  contact:
+    name: Pegasus SA
+    email: suporte@pegasus.com.br
+    url: http://localhost:8080/pegasus/website.html # Add em 'resources/static/pegasus/website.html'
+  license:
+    name: Licença MIT
+    url: http://localhost:8080/docs/license.html # Add em 'resources/static/docs/license.html'
+  description: |-
+    Esta API contempla o gerenciamento de metadados de um jogo de RPG separados por tags.
+    
+    Sobre a API:
+    - Solicitações: Via localhost
+    - Acesse: http://localhost:8080/swagger-ui/index.html
+    
+    A API pode ser usada para ter controle de metados de persob:
+    - Personagem
+    - Raça
+    - Classe
+
+servers:
+  - url: http://localhost:8080
+    description: Servidor local de desenvolvimento
+
+tags:
+  - name: game-character
+    description: Operações CRUD de Personagens → [ getAllPage - getOne - create - update - delete ]
+  - name: game-race
+    description: Operações CRUD de Raça → [ getAllPage - getOne - create - update - delete ]
+  - name: game-class
+    description: Operações CRUD de Classe → [ getAllPage - getOne - create - update - delete ]
+
+paths:
+
+  /GameCharacter:
+    parameters:
+      - $ref: '#/components/parameters/_header_x_pegasus_client_id'
+
+    get:
+      tags: [ game-character ]
+      operationId: game-character-find-all-page
+      summary: Listar elementos com paginação.
+      description: Retorna uma lista paginada de elementos disponíveis.
+      parameters:
+        - $ref: '#/components/parameters/_query_offset'
+        - $ref: '#/components/parameters/_query_limit'
+      responses:
+        '200':
+          description: Retorna a página solicitada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameCharacterFindAllPageResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+    post:
+      tags: [ game-character ]
+      operationId: game-character-create
+      summary: Criar novo elemento
+      description: Cria um novo elemento no sistema com base nos dados informados na requisição.
+      requestBody:
+        description: Os dados de criação do elemento
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameCharacterCreateBodyType'
+      responses:
+        '201':
+          description: O elemento criado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameCharacterCreateResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+  /GameCharacter/{game_Character_id}:
+    parameters:
+      - $ref: "#/components/parameters/_header_x_pegasus_client_id"
+      - $ref: '#/components/parameters/_path_game_character_id'
+
+    get:
+      tags: [ game-character ]
+      operationId: game-character-find-by-id
+      summary: Buscar elemento por ID.
+      description: Retorna os dados completos de um elemento específico com base em seu identificador único.
+      responses:
+        '200':
+          description: O elemento solicitado solicitado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameCharacterFindByIdResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "404":
+          $ref: '#/components/responses/not-found-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponseType'
+
+    put:
+      tags: [ game-character ]
+      operationId: game-character-update
+      summary: Atualiza um elemento do sistema
+      description: Atualiza os dados de um elemento do sistema, identificado pelo seu ID
+      requestBody:
+        description: Os dados da atualização do elemento.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameCharacterUpdateBodyType'
+      responses:
+        '200':
+          description: O elemento atualizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameCharacterUpdateResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "404":
+          $ref: '#/components/responses/not-found-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+    delete:
+      tags: [ game-character ]
+      operationId: game-character-excluir
+      summary: Excluir um elemento do sistema
+      description: Remove um elemento do sistema de forma permanente, com base em seu identificador.
+      responses:
+        '204':
+          description: ok → sem retorno.
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "404":
+          $ref: '#/components/responses/not-found-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+
+  /GameRace:
+    parameters:
+      - $ref: '#/components/parameters/_header_x_pegasus_client_id'
+
+    get:
+      tags: [ game-race ]
+      operationId: game-race-find-all-page
+      summary: Listar elementos com paginação.
+      description: Retorna uma lista paginada de elementos disponíveis.
+      parameters:
+        - $ref: '#/components/parameters/_query_offset'
+        - $ref: '#/components/parameters/_query_limit'
+      responses:
+        '200':
+          description: Retorna a página solicitada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameRaceFindAllPageResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+    post:
+      tags: [ game-race ]
+      operationId: game-race-create
+      summary: Criar novo elemento
+      description: Cria um novo elemento no sistema com base nos dados informados na requisição.
+      requestBody:
+        description: Os dados de criação do elemento
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameRaceCreateBodyType'
+      responses:
+        '201':
+          description: O elemento criado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameRaceCreateResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+  /GameRace/{game_race_id}:
+    parameters:
+      - $ref: "#/components/parameters/_header_x_pegasus_client_id"
+      - $ref: '#/components/parameters/_path_game_race_id'
+
+    get:
+      tags: [ game-race ]
+      operationId: game-race-find-by-id
+      summary: Buscar elemento por ID.
+      description: Retorna os dados completos de um elemento específico com base em seu identificador único.
+      responses:
+        '200':
+          description: O elemento solicitado solicitado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameRaceFindByIdResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "404":
+          $ref: '#/components/responses/not-found-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponseType'
+
+    put:
+      tags: [ game-race ]
+      operationId: game-race-update
+      summary: Atualiza um elemento do sistema
+      description: Atualiza os dados de um elemento do sistema, identificado pelo seu ID
+      requestBody:
+        description: description
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameRaceUpdateBodyType'
+      responses:
+        '200':
+          description: O elemento atualizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameRaceUpdateResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "404":
+          $ref: '#/components/responses/not-found-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+    delete:
+      tags: [ game-race ]
+      operationId: game-race-excluir
+      summary: Excluir um elemento do sistema
+      description: Remove um elemento do sistema de forma permanente, com base em seu identificador.
+      responses:
+        '204':
+          description: ok → sem retorno.
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "404":
+          $ref: '#/components/responses/not-found-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+  /GameClass:
+    parameters:
+      - $ref: '#/components/parameters/_header_x_pegasus_client_id'
+
+    get:
+      tags: [ game-class ]
+      operationId: game-class-find-all-page
+      summary: Listar elementos com paginação.
+      description: Retorna uma lista paginada de elementos disponíveis.
+      parameters:
+        - $ref: '#/components/parameters/_query_offset'
+        - $ref: '#/components/parameters/_query_limit'
+      responses:
+        '200':
+          description: Retorna a página solicitada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameClassFindAllPageResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+    post:
+      tags: [ game-class ]
+      operationId: game-class-create
+      summary: Criar novo elemento
+      description: Cria um novo elemento no sistema com base nos dados informados na requisição.
+      requestBody:
+        description: Os dados de criação do elemento
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameClassCreateBodyType'
+      responses:
+        '201':
+          description: O elemento criado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameClassCreateResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+  /GameClass/{game_class_id}:
+    parameters:
+      - $ref: "#/components/parameters/_header_x_pegasus_client_id"
+      - $ref: '#/components/parameters/_path_game_class_id'
+
+    get:
+      tags: [ game-class ]
+      operationId: game-class-find-by-id
+      summary: Buscar elemento por ID.
+      description: Retorna os dados completos de um elemento específico com base em seu identificador único.
+      responses:
+        '200':
+          description: O elemento solicitado solicitado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameClassFindByIdResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "404":
+          $ref: '#/components/responses/not-found-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerErrorResponseType'
+
+    put:
+      tags: [ game-class ]
+      operationId: game-class-update
+      summary: Atualiza um elemento do sistema
+      description: Atualiza os dados de um elemento do sistema, identificado pelo seu ID
+      requestBody:
+        description: description
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameClassUpdateBodyType'
+      responses:
+        '200':
+          description: O elemento atualizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameClassUpdateResponseType'
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "404":
+          $ref: '#/components/responses/not-found-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+    delete:
+      tags: [ game-class ]
+      operationId: game-class-excluir
+      summary: Excluir um elemento do sistema
+      description: Remove um elemento do sistema de forma permanente, com base em seu identificador.
+      responses:
+        '204':
+          description: ok → sem retorno.
+        "400":
+          $ref: '#/components/responses/bad-request-response'
+        "404":
+          $ref: '#/components/responses/not-found-response'
+        "500":
+          $ref: '#/components/responses/internal-server-error-response'
+
+
+components:
+  schemas:
+
+    # [TYPE → FIELD]
+    field-game-id:
+      type: integer
+
+    field-skills:
+      type: array
+      items:
+        type: string
+
+    field-game-name:
+      type: string
+      minLength: 5
+      maxLength: 150
+
+    # [ TYPE → REQUEST → GAME_CHARACTER → BODY]
+    GameCharacterCreateBodyType:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/field-game-name'
+        classId:
+          $ref: '#/components/schemas/field-game-id'
+        raceId:
+          $ref: '#/components/schemas/field-game-id'
+
+    GameCharacterUpdateBodyType:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/field-game-name'
+        classId:
+          $ref: '#/components/schemas/field-game-id'
+        raceId:
+          $ref: '#/components/schemas/field-game-id'
+
+    # [ TYPE → REQUEST → GAME_CHARACTER → BODY]
+    GameRaceCreateBodyType:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/field-game-name'
+        Id:
+          $ref: '#/components/schemas/field-game-id'
+        attributes:
+          $ref: '#/components/schemas/AttributesType'
+
+    GameRaceUpdateBodyType:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/field-game-name'
+        Id:
+          $ref: '#/components/schemas/field-game-id'
+        attributes:
+          $ref: '#/components/schemas/AttributesType'
+
+    # [ TYPE → REQUEST → GAME_CLASS → BODY]
+    GameClassCreateBodyType:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/field-game-name'
+        Id:
+          $ref: '#/components/schemas/field-game-id'
+        attributes:
+          $ref: '#/components/schemas/AttributesType'
+
+    GameClassUpdateBodyType:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/field-game-name'
+        Id:
+          $ref: '#/components/schemas/field-game-id'
+        attributes:
+          $ref: '#/components/schemas/AttributesType'
+
+    # [ TYPE → RESPONSE → OBJECT]
+    paginationType:
+      type: object
+      description: 'Modelo padrão para retorno de paginação'
+      properties:
+        page:
+          description: 'página solicitada (base-0).'
+          type: integer
+          example: 10
+        size:
+          description: 'quantidade máxima de itens pos pagina.'
+          type: integer
+          example: 30
+        totalElements:
+          description: 'quantidade de registros na página.'
+          type: integer
+          format: int64
+          example: 300
+        totalPages:
+          type: integer
+          description: 'total de páginas (base-size).'
+          example: 10
+        hasPrevious:
+          type: boolean
+          description: 'existe próxima página?'
+          example: true
+        hasNext:
+          type: boolean
+          description: 'existe página anterior?'
+          example: false
+
+    # [ TYPE → RESPONSE → GAME_CHARACTER]
+    GameCharacterFindAllPageResponseType:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/paginationType'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameCharacterType'
+
+    GameCharacterFindByIdResponseType:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GameCharacterType'
+
+    GameCharacterCreateResponseType:
+      type: object
+      description: 'descrição'
+      properties:
+        data:
+          $ref: '#/components/schemas/GameCharacterType'
+
+    GameCharacterUpdateResponseType:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GameCharacterType'
+
+    # [ TYPE → RESPONSE → GAME_RACE]
+    GameRaceFindAllPageResponseType:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/paginationType'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameRaceType'
+
+    GameRaceFindByIdResponseType:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GameRaceType'
+
+    GameRaceCreateResponseType:
+      type: object
+      description: 'descrição'
+      properties:
+        data:
+          $ref: '#/components/schemas/GameRaceType'
+
+    GameRaceUpdateResponseType:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GameRaceType'
+
+    # [ TYPE → RESPONSE → GAME_CLASS]
+    GameClassFindAllPageResponseType:
+      type: object
+      properties:
+        pagination:
+          $ref: '#/components/schemas/paginationType'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameClassType'
+
+    GameClassFindByIdResponseType:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GameClassType'
+
+    GameClassCreateResponseType:
+      type: object
+      description: 'descrição'
+      properties:
+        data:
+          $ref: '#/components/schemas/GameClassType'
+
+    GameClassUpdateResponseType:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/GameClassType'
+
+    # [ TYPE → RESPONSE → FAIL ]
+    ExceptionResponseType:
+      type: object
+      description: Modelo padrão para erros
+      properties:
+        details:
+          type: array
+          items:
+            type: string
+          description: Detalhes do erro ocorrido.
+          example: [ "Mensagem de erro 1" ]
+
+    BadRequestType:
+      allOf:
+        - $ref: '#/components/schemas/ExceptionResponseType'
+        - type: object
+          example:
+            details:
+              - "O campo Name é obrigatório"
+              - "O campo CharClassId é obrigatório"
+              - "O campo CharRaceId é obrigatório"
+
+    NotFoundResponseType:
+      allOf:
+        - $ref: '#/components/schemas/ExceptionResponseType'
+        - type: object
+          example:
+            details:
+              - "Character 123 não encontrado"
+
+    ConflictResponseType:
+      allOf:
+        - $ref: '#/components/schemas/ExceptionResponseType'
+        - type: object
+          example:
+            details:
+              - "O Character 123 ja existe."
+
+    InternalServerErrorResponseType:
+      allOf:
+        - $ref: '#/components/schemas/ExceptionResponseType'
+        - type: object
+          example:
+            details:
+              - "Banco de dados off-line"
+
+    # [ TYPE → OBJECTS ]
+    GameCharacterType:
+      type: object
+      properties:
+        character:
+          $ref: '#/components/schemas/IdNameType'
+        characterRace:
+          $ref: '#/components/schemas/IdNameType'
+        characterClass:
+          $ref: '#/components/schemas/IdNameType'
+        attributes:
+          $ref: '#/components/schemas/AttributesType'
+
+    IdNameType:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/field-game-id'
+        name:
+          $ref: '#/components/schemas/field-game-name'
+
+
+    GameRaceType:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/field-game-id'
+        name:
+          $ref: '#/components/schemas/field-game-name'
+        attributes:
+          $ref: '#/components/schemas/AttributesType'
+
+    GameClassType:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/field-game-id'
+        name:
+          $ref: '#/components/schemas/field-game-name'
+        attributes:
+          $ref: '#/components/schemas/AttributesType'
+
+    AttributesType:
+      type: object
+      description: ''
+      properties:
+        life:
+          type: integer
+        damage:
+          $ref: '#/components/schemas/DamageType'
+        resistance:
+          $ref: '#/components/schemas/ResistanceType'
+        skills:
+          $ref: '#/components/schemas/field-skills'
+
+    DamageType:
+      type: object
+      description: ''
+      properties:
+        physical:
+          type: integer
+        magic:
+          type: integer
+
+    ResistanceType:
+      type: object
+      description: ''
+      properties:
+        physical:
+          type: integer
+        magic:
+          type: integer
+
+  parameters:
+
+    # [ HEADER ] name → kebab-case ou x-prefix
+    _header_x_pegasus_client_id:
+      name: X-PEGASUS-CLIENT-ID
+      in: header
+      required: true
+      description: Client ID header
+      schema:
+        type: string
+      example: a1b30a84-7bf3-442e-84a0-e935d8163b5a
+
+    # [ PATH ] name → camelCase ou snake_case
+    _path_game_character_id:
+      name: game_Character_id
+      in: path
+      required: true
+      description: Identificador único do item
+      schema:
+        type: integer
+        format: int64
+        example: 1
+
+    _path_game_race_id:
+      name: game_race_id
+      in: path
+      required: true
+      description: Identificador único do item
+      schema:
+        type: integer
+        format: int64
+        example: 1
+
+    _path_game_class_id:
+      name: game_class_id
+      in: path
+      required: true
+      description: Identificador único do item
+      schema:
+        type: integer
+        format: int64
+        example: 1
+
+    # [ QUERY ] name → underline inicial seguido de camelCase
+    _query_limit:
+      name: _limit
+      in: query
+      required: false
+      allowEmptyValue: false
+      description: 'description'
+      schema:
+        type: integer
+        format: int32
+      example: 10
+
+    _query_offset:
+      name: _offset
+      in: query
+      allowEmptyValue: false
+      description: 'description'
+      schema:
+        type: integer
+        format: int32
+      example: 1
+
+  responses:
+
+    bad-request-response:
+      description: Invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestType'
+
+    not-found-response:
+      description: Element not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotFoundResponseType'
+
+    conflict-response:
+      description: Recurso não encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ConflictResponseType'
+
+    internal-server-error-response:
+      description: Erro interno no serviço
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalServerErrorResponseType'
+
+    default-error-response:
+      description: Erro inesperado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExceptionResponseType'
+#####
+#####
+#####
+#####
+#####
